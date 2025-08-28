@@ -16,6 +16,7 @@
             --light: #f8f8f8;
             --card-bg: rgba(30, 30, 40, 0.8);
             --transition: all 0.3s ease;
+            --verified: #0099ff;
         }
         
         * {
@@ -84,14 +85,61 @@
             border-radius: 2px;
         }
         
-        .tagline {
-            font-size: 1.3rem;
-            opacity: 0.9;
-            margin: 20px 0;
-            font-weight: 300;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
+        .tagline-container {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px auto;
+            max-width: 800px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tagline-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--secondary), var(--primary), var(--accent));
+        }
+        
+        .tagline-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            text-align: left;
+        }
+        
+        .tagline-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+        
+        .tagline-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .tagline-icon {
+            margin-right: 12px;
+            color: var(--accent);
+            font-size: 1.2rem;
+            min-width: 25px;
+            text-align: center;
+        }
+        
+        .tagline-text {
+            font-weight: 500;
+            font-size: 1.1rem;
         }
         
         .social-badges {
@@ -147,7 +195,7 @@
             position: relative;
             overflow: hidden;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
+        }        
         
         .link-card::before {
             content: '';
@@ -178,6 +226,28 @@
             margin-bottom: 15px;
             color: var(--light);
             font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .verified-badge {
+            color: var(--verified);
+            font-size: 1.2rem;
+            position: relative;
+        }
+        
+        .verified-badge::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 153, 255, 0.1);
+            border-radius: 50%;
+            z-index: -1;
         }
         
         .link-description {
@@ -311,14 +381,22 @@
                 font-size: 2.8rem;
             }
             
-            .tagline {
-                font-size: 1.1rem;
+            .tagline-container {
+                padding: 20px 15px;
+            }
+            
+            .tagline-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tagline-text {
+                font-size: 1rem;
             }
             
             .link-card {
                 padding: 25px;
             }
-            
+
             .donation {
                 padding: 30px 20px;
             }
@@ -401,9 +479,37 @@
     <div class="container">
         <header>
             <h1 class="logo animated">IRGXY MODS</h1>
-            <p class="tagline animated delay-1">Premium Mod Apps & Games For Free</p>
             
-            <div class="channels-header animated delay-1">Main Channels</div>
+            <div class="tagline-container animated delay-1">
+                <div class="tagline-grid">
+                    <div class="tagline-item">
+                        <div class="tagline-icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="tagline-text">AM Premium & Mod Free</div>
+                    </div>
+                    <div class="tagline-item">
+                        <div class="tagline-icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="tagline-text">Apk HD & Wink & Winkit Premium Free</div>
+                    </div>
+                    <div class="tagline-item">
+                        <div class="tagline-icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="tagline-text">Apk Premium & Mod Free</div>
+                    </div>
+                    <div class="tagline-item">
+                        <div class="tagline-icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="tagline-text">Apk JB Free</div>
+                    </div>
+                    <div class="tagline-item">
+                        <div class="tagline-icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="tagline-text">Share Account Apk Free</div>
+                    </div>
+                    <div class="tagline-item">
+                        <div class="tagline-icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="tagline-text">Apk Game Premium & Mod Free</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="channels-header animated delay-1">IRGXY MODS CHANNEL</div>
             
             <div class="social-badges animated delay-2">
                 <a href="https://whatsapp.com/channel/0029Vb5kLy26BIEZjEe5U33j" class="social-badge whatsapp-badge" target="_blank">
@@ -413,8 +519,8 @@
                     <i class="fab fa-telegram"></i>
                 </a>
             </div>
-            
-            <div class="channels-header animated delay-2">Follow Us</div>
+
+                        <div class="channels-header animated delay-2">Follow Us</div>
             
             <div class="social-badges animated delay-3">
                 <a href="https://www.tiktok.com/@irgxy11" class="social-badge" target="_blank">
@@ -435,63 +541,63 @@
         <div class="links-grid">
             <div class="link-card animated delay-1">
                 <i class="link-icon fab fa-whatsapp"></i>
-                <h3 class="link-title">Mod/Premium Apps</h3>
+                <h3 class="link-title">Saluran Apk Premium/Mod <span class="verified-badge"><i class="fas fa-badge-check"></i></span></h3>
                 <p class="link-description">Join our WhatsApp channel for the latest modded and premium apps with exclusive features unlocked.</p>
                 <a href="https://whatsapp.com/channel/0029Vb5kLy26BIEZjEe5U33j" class="btn" target="_blank">Join Channel</a>
             </div>
             
             <div class="link-card animated delay-1">
                 <i class="link-icon fas fa-gamepad"></i>
-                <h3 class="link-title">Mod/Premium Games</h3>
+                <h3 class="link-title">Saluran Games Premium/Mod <span class="verified-badge"><i class="fas fa-badge-check"></i></span></h3>
                 <p class="link-description">Join our WhatsApp channel for modded games with unlimited resources, unlocked levels, and premium features.</p>
                 <a href="https://whatsapp.com/channel/0029VbBXgPoJP20v92oTrt1R" class="btn" target="_blank">Join Channel</a>
             </div>
             
             <div class="link-card animated delay-2">
                 <i class="link-icon fab fa-telegram"></i>
-                <h3 class="link-title">Telegram Channel</h3>
+                <h3 class="link-title">Telegram Channel <span class="verified-badge"><i class="fas fa-badge-check"></i></span></h3>
                 <p class="link-description">Follow our Telegram channel for additional mod content, early updates, and exclusive releases.</p>
                 <a href="https://t.me/irgxymods" class="btn" target="_blank">Follow Us</a>
             </div>
             
             <div class="link-card animated delay-2">
                 <i class="link-icon fab fa-whatsapp"></i>
-                <h3 class="link-title">WhatsApp Group</h3>
+                <h3 class="link-title">WhatsApp Group <span class="verified-badge"><i class="fas fa-badge-check"></i></span></h3>
                 <p class="link-description">Join our community WhatsApp group to discuss mods, get help, and share your experiences.</p>
-                <a href="https://chat.whatsapp.com/HTE9pp47PpTDDC3Lf57TFa?mode=ac_t" class="btn" target="_blank">Join Group</a>
+                <a href="https://chat.whatsapp.com/FnQHscuLa4e0Xss0UKHn5D?mode=ems_copy_c" class="btn" target="_blank">Join Group</a>
             </div>
             
             <div class="link-card animated delay-3">
                 <i class="link-icon fab fa-tiktok"></i>
-                <h3 class="link-title">TikTok</h3>
-                <p class="link-description">Follow us on TikTok for short videos, mod previews, and entertaining content related to modding.</p>
+                <h3 class="link-title">TikTok <span class="verified-badge"><i class="fas fa-badge-check"></i></span></h3>
+                <p class="link-description">Follow us on TikTok for latest mod apk info, mod previews, and entertaining content related to modding.</p>
                 <a href="https://www.tiktok.com/@irgxy11" class="btn" target="_blank">Follow Us</a>
             </div>
             
             <div class="link-card animated delay-3">
                 <i class="link-icon fab fa-youtube"></i>
-                <h3 class="link-title">YouTube</h3>
-                <p class="link-description">Subscribe to our YouTube channel for tutorials, mod reviews, and gameplay videos with mod features.</p>
+                <h3 class="link-title">YouTube <span class="verified-badge"><i class="fas fa-badge-check"></i></span></h3>
+                <p class="link-description">Subscribe to our YouTube channel for tutorials, mod reviews, latest mod application and gameplay videos with mod features.</p>
                 <a href="https://youtube.com/@irgxy_mod" class="btn" target="_blank">Subscribe</a>
             </div>
             
             <div class="link-card animated">
-                <i class="link-icon fab fa-instagram"></i>
-                <h3 class="link-title">Instagram</h3>
+            <i class="link-icon fab fa-instagram"></i>
+                <h3 class="link-title">Instagram <span class="verified-badge"><i class="fas fa-badge-check"></i></span></h3>
                 <p class="link-description">Follow our Instagram for updates, behind-the-scenes content, and highlights from our modding community.</p>
                 <a href="https://www.instagram.com/irgi_mods" class="btn" target="_blank">Follow Us</a>
             </div>
             
             <div class="link-card animated">
                 <i class="link-icon fab fa-facebook"></i>
-                <h3 class="link-title">Facebook</h3>
+                <h3 class="link-title">Facebook <span class="verified-badge"><i class="fas fa-badge-check"></i></span></h3>
                 <p class="link-description">Like our Facebook page for the latest news, updates, and community events related to modding.</p>
                 <a href="https://www.facebook.com/share/16c3tr2gRX/" class="btn" target="_blank">Like Page</a>
             </div>
         </div>
         
         <div class="donation animated">
-            <h2 class="donation-title">Support Our Work</h2>
+            <h2 class="donation-title">Donate and Support IrgxyMods</h2>
             <p class="donation-text">Your donations help us continue providing quality mods, apps, and games for free. We appreciate any support that helps maintain our services and create new content.</p>
             <a href="https://ik.imagekit.io/IrgxyMods/quality_restoration_20250824003928342.png?updatedAt=1756133482961" target="_blank">
                 <img src="https://ik.imagekit.io/IrgxyMods/quality_restoration_20250824003928342.png?updatedAt=1756133482961" alt="Donation Methods" class="donation-image">
@@ -501,8 +607,8 @@
     </div>
     
     <footer>
-        <p>&copy; 2023 IRGXY MODS. All rights reserved.</p>
-        <p>This website provides links to modified applications and games for educational purposes only.</p>
+        <p>&copy; 2025 IRGXY MODS. All rights reserved.</p>
+        <p>This website provides links to modified apps for educational purposes and share apps premium/mod only just.</p>
         
         <div class="footer-links">
             <a href="#" class="footer-link">Privacy Policy</a>
