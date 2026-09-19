@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Hub IRGXY — Pusat kontrol mod & tools IRGXYMODS. Cari mod, cheat, akun premium, request, dan statistik live dalam satu dashboard interaktif." />
+<meta name="keywords" content="hub irgxy, irgxymods, mod apk, cheat game, dashboard mod" />
+<meta name="author" content="IRGXYMODS" />
+<meta name="theme-color" content="#0a0a0a" />
+<meta property="og:title" content="Hub IRGXY — Pusat Kontrol Mod & Tools" />
+<meta property="og:description" content="Dashboard interaktif mod, cheat, akun premium, dan fitur eksklusif IRGXYMODS." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://irgxymods.my.id/hub.html" />
+<meta name="twitter:card" content="summary_large_image" />
+<title>Hub IRGXY — Pusat Kontrol Mod & Tools</title>
+
+<link rel="icon" type="image/png" href="https://ik.imagekit.io/IrgxyMods/IMG_20250903_201352.jpg?updatedAt=1756905753623" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<link rel="stylesheet" href="style.css" />
+
+<style>
+/* ================================================================
+   HUB DESIGN TOKENS
+   ================================================================ */
+:root{
+  --hub-bg:#0a0a0a;
+  --hub-bg-soft:#0f0f18;
+  --hub-card:rgba(20,20,32,0.72);
+  --hub-border:rgba(124,58,237,0.18);
+  --hub-border-hover:rgba(124,58,237,0.55);
+  --hub-accent-1:#7c3aed;
+  --hub-accent-2:#06b6d4;
+  --hub-accent-3:#a78bfa;
+  --hub-gradient:linear-gradient(135deg,#7c3aed 0%,#06b6d4 100%);
+  --hub-gradient-soft:linear-gradient(135deg,rgba(124,58,237,.14),rgba(6,182,212,.08));
+  --hub-text:#e8e8f0;
+  --hub-text-dim:#a0a0b8;
+  --hub-text-muted:#6b6b85;
+  --hub-glow:0 0 30px rgba(124,58,237,.35);
+  --hub-radius:18px;
+  --hub-radius-sm:12px;
+}
+
+/* ================================================================
+   [FIX #1, #2] BODY — konsisten dengan style.css
+   - background: linear-gradient identik dengan body{} di style.css
+   - hapus radial ungu/cyan & !important
+   - tambah position:relative agar partikel emas punya stacking context
+   ================================================================ */
+body.hub-page{
+  background:linear-gradient(160deg,#0a0a14 0%,#0f0f1a 30%,#12122a 60%,#0d0d1f 100%);
+  background-attachment:fixed;
+  color:var(--hub-text);
+  font-family:'Inter','Poppins',system-ui,sans-serif;
+  overflow-x:hidden;
+  position:relative;
+}
+
+/* ================================================================
+   [FIX #3] Grid halus + animasi gridShift — identik body::before di style.css
+   ================================================================ */
+body.hub-page::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);
+  background-size:50px 50px;
+  pointer-events:none;
+  z-index:0;
+  animation:gridShift 20s linear infinite;
+}
+
+/* ================================================================
+   [FIX #4, #5] TEMA TERANG
+   ================================================================ */
+body.hub-page.light-theme{
+  background:#f2f3f8 !important;
+  background-attachment:fixed !important;
+  color:#14142a;
+}
+body.hub-page.light-theme::before{
+  background-image:linear-gradient(rgba(0,0,0,0.045) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(0,0,0,0.045) 1px,transparent 1px);
+}
+
+/* ================================================================
+   [FIX #6] PARTIKEL EMAS dari main.js — Visibility Fix
+   Container partikel punya z-index:-1 → tenggelam di hub.html karena
+   stacking context berbeda. Naikkan ke z-index:1 agar muncul di atas
+   body background, tapi tetap di bawah hub-main (z-index:2) & header (200).
+   ================================================================ */
+body.hub-page > div[style*="pointer-events:none"][style*="z-index:-1"]{
+  z-index:1 !important;
+  pointer-events:none !important;
+}
+body.hub-page > div[style*="pointer-events:none"][style*="z-index:-1"] > div{
+  z-index:1 !important;
+}
+
+/* ===== LIGHT THEME — komponen hub ===== */
+body.hub-page.light-theme .hub-card,
+body.hub-page.light-theme .hub-stat,
+body.hub-page.light-theme .hub-newest-item,
+body.hub-page.light-theme .hub-request-form,
+body.hub-page.light-theme .hub-request-history-item{background:rgba(255,255,255,.85);border-color:rgba(124,58,237,.18);color:#14142a;}
+body.hub-page.light-theme .hub-heading,
+body.hub-page.light-theme .hub-quick-title,
+body.hub-page.light-theme .hub-section-title,
+body.hub-page.light-theme .hub-newest-title{color:#14142a;}
+body.hub-page.light-theme .hub-subtitle,
+body.hub-page.light-theme .hub-newest-cat,
+body.hub-page.light-theme .hub-newest-date{color:#55557a;}
+body.hub-page.light-theme .hub-header{background:rgba(255,255,255,.85);border-bottom-color:rgba(124,58,237,.15);}
+body.hub-page.light-theme .hub-search-input{background:rgba(0,0,0,.04);color:#14142a;border-color:rgba(124,58,237,.2);}
+body.hub-page.light-theme .hub-icon-btn{background:rgba(0,0,0,.04);color:#14142a;}
+body.hub-page.light-theme .hub-notif-panel{background:#fff;color:#14142a;}
+body.hub-page.light-theme .hub-notif-item:hover{background:rgba(124,58,237,.06);}
+body.hub-page.light-theme .hub-notif-desc{color:#55557a;}
+body.hub-page.light-theme .hub-input,
+body.hub-page.light-theme .hub-select,
+body.hub-page.light-theme .hub-textarea{background:rgba(0,0,0,.03);color:#14142a;border-color:rgba(124,58,237,.2);}
+body.hub-page.light-theme .bottom-nav{background:rgba(255,255,255,.9);border-top-color:rgba(124,58,237,.15);}
+body.hub-page.light-theme .bottom-nav a{color:#55557a;}
+body.hub-page.light-theme footer{background:transparent;}
+
+/* ===== CURSOR GLOW ===== */
+#hubCursorGlow{
+  position:fixed;width:280px;height:280px;border-radius:50%;
+  pointer-events:none;z-index:1;
+  background:radial-gradient(circle,rgba(124,58,237,.22) 0%,rgba(6,182,212,.12) 40%,transparent 70%);
+  transform:translate(-50%,-50%);
+  transition:opacity .3s ease;
+  mix-blend-mode:screen;will-change:transform,left,top;display:none;
+}
+@media (hover:hover) and (pointer:fine){#hubCursorGlow{display:block;}}
+
+/* ===== HEADER ===== */
+.hub-header{
+  position:sticky;top:0;z-index:200;
+  background:rgba(10,10,15,.78);
+  backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+  border-bottom:1px solid var(--hub-border);
+  padding:.9rem 1rem;
+  transition:background .3s ease;
+}
+.hub-header-inner{
+  max-width:1300px;margin:0 auto;
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+}
+.hub-logo{display:flex;align-items:center;gap:8px;text-decoration:none;flex-shrink:0;}
+.hub-logo i{font-size:1.6rem;background:var(--hub-gradient);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 10px rgba(124,58,237,.6));}
+.hub-logo h1{font-family:'Poppins',sans-serif;font-size:1.35rem;font-weight:800;letter-spacing:-.3px;background:var(--hub-gradient);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.hub-logo h1 span{font-weight:400;font-size:.7rem;display:block;letter-spacing:2px;color:var(--hub-text-muted);-webkit-text-fill-color:var(--hub-text-muted);}
+
+.hub-search-wrapper{flex:1;min-width:220px;position:relative;}
+.hub-search-input{
+  width:100%;padding:12px 110px 12px 44px;
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--hub-border);border-radius:30px;
+  color:var(--hub-text);font-family:'Inter',sans-serif;font-size:.92rem;
+  transition:all .3s ease;outline:none;
+}
+.hub-search-input::placeholder{color:var(--hub-text-muted);}
+.hub-search-input:focus{border-color:var(--hub-accent-1);background:rgba(124,58,237,.06);box-shadow:0 0 0 3px rgba(124,58,237,.12),var(--hub-glow);}
+.hub-search-wrapper > .fa-search{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--hub-text-muted);font-size:.95rem;pointer-events:none;}
+.hub-kbd-hint{position:absolute;right:12px;top:50%;transform:translateY(-50%);display:flex;gap:4px;pointer-events:none;}
+.hub-kbd-hint kbd{font-family:'Inter',sans-serif;font-size:.65rem;font-weight:600;padding:3px 7px;background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.3);border-radius:6px;color:var(--hub-accent-3);}
+
+.hub-search-results{
+  position:absolute;top:calc(100% + 8px);left:0;right:0;
+  background:rgba(15,15,25,.98);backdrop-filter:blur(20px);
+  border:1px solid var(--hub-border);border-radius:var(--hub-radius-sm);
+  max-height:400px;overflow-y:auto;
+  box-shadow:0 20px 50px rgba(0,0,0,.6),0 0 0 1px rgba(124,58,237,.08);
+  display:none;z-index:300;
+}
+.hub-search-results.active{display:block;animation:hubFadeDown .25s ease;}
+@keyframes hubFadeDown{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
+.hub-search-item{display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.04);transition:background .2s ease;text-decoration:none;color:inherit;}
+.hub-search-item:last-child{border-bottom:none;}
+.hub-search-item:hover,.hub-search-item.highlighted{background:rgba(124,58,237,.1);}
+.hub-search-item .sr-emoji{font-size:1.4rem;flex-shrink:0;}
+.hub-search-item .sr-info{flex:1;min-width:0;}
+.hub-search-item .sr-name{font-weight:600;font-size:.9rem;color:var(--hub-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.hub-search-item .sr-name mark{background:rgba(6,182,212,.35);color:#fff;border-radius:3px;padding:0 2px;}
+.hub-search-item .sr-cat{font-size:.72rem;color:var(--hub-text-muted);margin-top:2px;}
+.hub-search-item .sr-arrow{color:var(--hub-text-muted);font-size:.75rem;}
+.hub-search-empty{padding:30px 20px;text-align:center;color:var(--hub-text-dim);}
+.hub-search-empty .empty-emoji{font-size:2.4rem;display:block;margin-bottom:8px;opacity:.6;}
+.hub-search-empty a{color:var(--hub-accent-2);text-decoration:none;font-weight:600;}
+
+.hub-header-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.hub-icon-btn{
+  width:42px;height:42px;border-radius:50%;
+  background:rgba(255,255,255,.05);border:1px solid var(--hub-border);
+  color:var(--hub-text);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;position:relative;transition:all .3s ease;font-size:1rem;
+}
+.hub-icon-btn:hover{border-color:var(--hub-accent-1);color:var(--hub-accent-3);box-shadow:var(--hub-glow);transform:translateY(-2px);}
+
+.hub-notif-badge{
+  position:absolute;top:-4px;right:-4px;
+  min-width:18px;height:18px;padding:0 5px;
+  background:var(--hub-gradient);color:#fff;font-size:.65rem;font-weight:700;
+  border-radius:10px;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 10px rgba(124,58,237,.6);animation:hubPulse 1.8s ease-in-out infinite;
+}
+.hub-notif-badge.hidden{display:none;}
+@keyframes hubPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.15);}}
+
+.hub-notif-panel{
+  position:absolute;top:calc(100% + 10px);right:0;
+  width:340px;max-width:calc(100vw - 24px);
+  background:rgba(15,15,25,.98);backdrop-filter:blur(22px);
+  border:1px solid var(--hub-border);border-radius:var(--hub-radius);
+  box-shadow:0 20px 60px rgba(0,0,0,.7);
+  opacity:0;visibility:hidden;transform:translateY(-10px);
+  transition:all .3s ease;z-index:400;overflow:hidden;
+}
+.hub-notif-panel.active{opacity:1;visibility:visible;transform:translateY(0);}
+.hub-notif-header{padding:14px 18px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,.06);background:var(--hub-gradient-soft);}
+.hub-notif-header h4{font-size:.95rem;font-weight:700;margin:0;}
+.hub-notif-header button{background:none;border:none;color:var(--hub-accent-2);font-size:.72rem;font-weight:600;cursor:pointer;font-family:inherit;}
+.hub-notif-header button:hover{text-decoration:underline;}
+.hub-notif-list{max-height:360px;overflow-y:auto;}
+.hub-notif-item{padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.04);display:flex;gap:12px;align-items:flex-start;transition:background .2s ease;cursor:pointer;position:relative;}
+.hub-notif-item:hover{background:rgba(124,58,237,.06);}
+.hub-notif-item.unread{background:rgba(124,58,237,.05);}
+.hub-notif-icon{width:36px;height:36px;flex-shrink:0;border-radius:10px;display:flex;align-items:center;justify-content:center;background:var(--hub-gradient-soft);border:1px solid var(--hub-border);font-size:.95rem;}
+.hub-notif-body{flex:1;min-width:0;}
+.hub-notif-title{font-size:.85rem;font-weight:700;color:var(--hub-text);margin-bottom:3px;}
+.hub-notif-desc{font-size:.76rem;color:var(--hub-text-dim);line-height:1.5;}
+.hub-notif-time{font-size:.68rem;color:var(--hub-text-muted);margin-top:4px;}
+.hub-notif-dot{width:8px;height:8px;border-radius:50%;background:var(--hub-gradient);flex-shrink:0;margin-top:6px;box-shadow:0 0 8px rgba(124,58,237,.7);}
+.hub-notif-item.read .hub-notif-dot{display:none;}
+
+/* ===== SETTINGS DROPDOWN (untuk main.js) ===== */
+.hub-header .settings-dropdown{
+  position:absolute;top:calc(100% + 10px);right:0;
+  background:rgba(20,20,32,0.98);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-radius:14px;border:1px solid var(--hub-border);
+  box-shadow:0 20px 60px rgba(0,0,0,0.7),0 0 0 1px rgba(124,58,237,.08);
+  padding:10px;min-width:220px;
+  opacity:0;visibility:hidden;transform:translateY(-10px);
+  transition:all .35s cubic-bezier(.4,0,.2,1);z-index:300;
+}
+.hub-header .settings-dropdown.active{opacity:1;visibility:visible;transform:translateY(0);}
+.hub-header .settings-dropdown::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--hub-gradient);border-radius:14px 14px 0 0;}
+.hub-header .dropdown-item{display:flex;align-items:center;gap:12px;width:100%;padding:10px 14px;background:transparent;border:none;color:rgba(255,255,255,.9);cursor:pointer;transition:all .3s ease;border-radius:10px;font-size:.9rem;text-align:left;font-family:inherit;text-decoration:none;}
+.hub-header .dropdown-item:hover{background:rgba(124,58,237,.15);color:var(--hub-accent-3);transform:translateX(5px);}
+.hub-header .dropdown-item i{width:20px;text-align:center;}
+.hub-header .dropdown-divider{height:1px;background:rgba(255,255,255,.08);margin:8px 0;}
+body.hub-page.light-theme .hub-header .settings-dropdown{background:rgba(255,255,255,.98);border-color:rgba(124,58,237,.2);}
+body.hub-page.light-theme .hub-header .dropdown-item{color:#14142a;}
+body.hub-page.light-theme .hub-header .dropdown-item:hover{background:rgba(124,58,237,.1);color:var(--hub-accent-1);}
+
+/* ===== NAV TABS ===== */
+.hub-header .nav-tabs-container{max-width:1300px;margin:10px auto 0;overflow-x:auto;padding-bottom:6px;scrollbar-width:none;}
+.hub-header .nav-tabs-container::-webkit-scrollbar{display:none;}
+.hub-header .nav-tabs{display:flex;gap:6px;flex-wrap:nowrap;justify-content:flex-start;}
+.hub-header .nav-tab{flex:0 0 auto;padding:9px 18px;background:rgba(255,255,255,.04);border:1px solid var(--hub-border);border-radius:30px;color:var(--hub-text-dim);font-size:.82rem;font-weight:600;cursor:pointer;transition:all .3s ease;white-space:nowrap;text-decoration:none;display:inline-block;backdrop-filter:blur(4px);}
+.hub-header .nav-tab:hover{background:rgba(124,58,237,.12);color:#fff;border-color:var(--hub-border-hover);transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.3),var(--hub-glow);}
+.hub-header .nav-tab.active{background:var(--hub-gradient);color:#fff;border-color:transparent;box-shadow:0 6px 22px rgba(124,58,237,.45);font-weight:700;}
+.hub-header .nav-tab.active:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(124,58,237,.6);}
+body.hub-page.light-theme .hub-header .nav-tab{background:rgba(0,0,0,.04);color:#55557a;}
+body.hub-page.light-theme .hub-header .nav-tab:hover{background:rgba(124,58,237,.1);color:#14142a;}
+body.hub-page.light-theme .hub-header .nav-tab.active{color:#fff;}
+
+/* ===== MAIN ===== */
+.hub-main{position:relative;z-index:2;max-width:1300px;margin:0 auto;padding:28px 16px 120px;}
+
+/* ===== HERO ===== */
+.hub-hero{text-align:center;padding:40px 20px 30px;margin-bottom:36px;position:relative;}
+.hub-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at center,rgba(124,58,237,.12),transparent 65%);pointer-events:none;z-index:-1;}
+.hub-badge-hero{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:30px;background:var(--hub-gradient-soft);border:1px solid var(--hub-border);font-size:.72rem;font-weight:700;letter-spacing:1px;color:var(--hub-accent-3);text-transform:uppercase;margin-bottom:16px;}
+.hub-badge-hero i{font-size:.7rem;}
+.hub-heading{font-family:'Poppins',sans-serif;font-size:clamp(1.8rem,5vw,3rem);font-weight:800;line-height:1.15;letter-spacing:-.5px;margin-bottom:14px;color:#fff;text-shadow:0 0 30px rgba(124,58,237,.5),0 0 60px rgba(6,182,212,.2);}
+.hub-heading .grad{background:var(--hub-gradient);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.hub-subtitle{font-size:clamp(.9rem,2vw,1.05rem);color:var(--hub-text-dim);max-width:640px;margin:0 auto 24px;line-height:1.7;}
+.hub-hero-search{max-width:640px;margin:0 auto;position:relative;}
+.hub-hero-search .hub-search-input{padding:16px 130px 16px 52px;font-size:1rem;border-radius:50px;}
+.hub-hero-search > .fa-search{left:22px;font-size:1.1rem;}
+.hub-hero-search .hub-kbd-hint{right:18px;}
+
+/* ===== SECTIONS ===== */
+.hub-section{margin-bottom:44px;opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.hub-section.in-view{opacity:1;transform:translateY(0);}
+.hub-section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap;}
+.hub-section-title{font-family:'Poppins',sans-serif;font-size:clamp(1.25rem,3vw,1.7rem);font-weight:800;letter-spacing:-.3px;color:#fff;margin:0;display:flex;align-items:center;gap:10px;}
+.hub-section-title i{font-size:1.1em;background:var(--hub-gradient);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 8px rgba(124,58,237,.6));}
+.hub-section-sub{font-size:.85rem;color:var(--hub-text-muted);margin-top:4px;font-weight:500;}
+
+/* ===== STATS ===== */
+.hub-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;}
+.hub-stat{background:var(--hub-card);border:1px solid var(--hub-border);border-radius:var(--hub-radius);padding:22px 18px;position:relative;overflow:hidden;transition:all .35s cubic-bezier(.4,0,.2,1);backdrop-filter:blur(12px);}
+.hub-stat::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--hub-gradient);opacity:.7;}
+.hub-stat:hover{transform:translateY(-6px);border-color:var(--hub-border-hover);box-shadow:0 15px 40px rgba(0,0,0,.4),var(--hub-glow);}
+.hub-stat-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:var(--hub-gradient-soft);border:1px solid var(--hub-border);font-size:1.2rem;margin-bottom:12px;color:var(--hub-accent-3);}
+.hub-stat-value{font-family:'Poppins',sans-serif;font-size:clamp(1.6rem,4vw,2.1rem);font-weight:800;letter-spacing:-.5px;background:var(--hub-gradient);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1.1;margin-bottom:4px;}
+.hub-stat-label{font-size:.8rem;color:var(--hub-text-dim);font-weight:600;text-transform:uppercase;letter-spacing:.8px;}
+
+/* ===== QUICK GRID ===== */
+.hub-quick-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;}
+.hub-card{background:var(--hub-card);border:1px solid var(--hub-border);border-radius:var(--hub-radius);padding:22px 20px;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:12px;position:relative;overflow:hidden;transition:all .35s cubic-bezier(.4,0,.2,1);backdrop-filter:blur(12px);cursor:pointer;}
+.hub-card::after{content:'';position:absolute;inset:0;border-radius:inherit;background:var(--hub-gradient-soft);opacity:0;transition:opacity .35s ease;pointer-events:none;}
+.hub-card:hover{transform:translateY(-6px) scale(1.03);border-color:var(--hub-border-hover);box-shadow:0 18px 45px rgba(0,0,0,.45),0 0 0 1px rgba(124,58,237,.15),var(--hub-glow);}
+.hub-card:hover::after{opacity:1;}
+.hub-card > *{position:relative;z-index:1;}
+.hub-quick-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:var(--hub-gradient-soft);border:1px solid var(--hub-border);font-size:1.4rem;color:var(--hub-accent-3);transition:transform .35s ease;}
+.hub-card:hover .hub-quick-icon{transform:scale(1.1) rotate(-4deg);}
+.hub-quick-title{font-family:'Poppins',sans-serif;font-size:1rem;font-weight:700;color:#fff;margin:0;display:flex;align-items:center;gap:8px;}
+.hub-quick-desc{font-size:.82rem;color:var(--hub-text-dim);line-height:1.55;margin:0;flex:1;}
+.hub-quick-badge{position:absolute;top:14px;right:14px;padding:3px 10px;border-radius:20px;font-size:.6rem;font-weight:800;letter-spacing:.6px;background:var(--hub-gradient);color:#fff;text-transform:uppercase;box-shadow:0 0 12px rgba(124,58,237,.6);z-index:2;}
+.hub-quick-arrow{font-size:.75rem;color:var(--hub-text-muted);transition:transform .3s ease,color .3s ease;align-self:flex-start;}
+.hub-card:hover .hub-quick-arrow{transform:translateX(4px);color:var(--hub-accent-2);}
+
+/* ===== NEWEST LIST ===== */
+.hub-newest-list{display:flex;flex-direction:column;gap:12px;}
+.hub-newest-item{background:var(--hub-card);border:1px solid var(--hub-border);border-radius:var(--hub-radius-sm);padding:14px 16px;display:flex;align-items:center;gap:14px;transition:all .3s ease;backdrop-filter:blur(10px);position:relative;overflow:hidden;}
+.hub-newest-item:hover{transform:translateX(6px);border-color:var(--hub-border-hover);box-shadow:0 10px 30px rgba(0,0,0,.35),var(--hub-glow);}
+.hub-newest-thumb{width:56px;height:56px;flex-shrink:0;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;background:var(--hub-gradient-soft);border:1px solid var(--hub-border);}
+.hub-newest-info{flex:1;min-width:0;}
+.hub-newest-title{font-size:.95rem;font-weight:700;color:#fff;margin:0 0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:8px;}
+.hub-badge-new{font-size:.55rem;font-weight:800;letter-spacing:.5px;padding:2px 8px;border-radius:20px;background:linear-gradient(135deg,#06b6d4,#7c3aed);color:#fff;text-transform:uppercase;animation:hubBlink 1.6s ease-in-out infinite;flex-shrink:0;}
+@keyframes hubBlink{0%,100%{opacity:1;box-shadow:0 0 10px rgba(6,182,212,.6);}50%{opacity:.65;box-shadow:0 0 20px rgba(124,58,237,.9);}}
+.hub-newest-meta{display:flex;gap:10px;flex-wrap:wrap;font-size:.72rem;color:var(--hub-text-muted);}
+.hub-newest-cat{color:var(--hub-accent-3);font-weight:600;}
+.hub-newest-btn{flex-shrink:0;padding:9px 18px;border-radius:24px;background:var(--hub-gradient);color:#fff;font-size:.78rem;font-weight:700;border:none;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px;transition:all .3s ease;box-shadow:0 4px 16px rgba(124,58,237,.3);}
+.hub-newest-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(124,58,237,.55);}
+
+/* ===== REQUEST ===== */
+.hub-request-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start;}
+@media (max-width:860px){.hub-request-grid{grid-template-columns:1fr;}}
+.hub-request-form{background:var(--hub-card);border:1px solid var(--hub-border);border-radius:var(--hub-radius);padding:24px 22px;backdrop-filter:blur(12px);}
+.hub-form-group{margin-bottom:14px;}
+.hub-form-group label{display:block;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--hub-text-dim);margin-bottom:6px;}
+.hub-input,.hub-select,.hub-textarea{width:100%;padding:12px 16px;background:rgba(255,255,255,.04);border:1.5px solid var(--hub-border);border-radius:var(--hub-radius-sm);color:var(--hub-text);font-family:'Inter',sans-serif;font-size:.9rem;transition:all .3s ease;outline:none;}
+.hub-textarea{resize:vertical;min-height:90px;}
+.hub-input:focus,.hub-select:focus,.hub-textarea:focus{border-color:var(--hub-accent-1);background:rgba(124,58,237,.06);box-shadow:0 0 0 3px rgba(124,58,237,.12);}
+.hub-input.error,.hub-select.error,.hub-textarea.error{border-color:#ff4d6d;box-shadow:0 0 0 3px rgba(255,77,109,.12);}
+.hub-form-error{font-size:.72rem;color:#ff6b81;margin-top:4px;display:none;}
+.hub-form-error.show{display:block;}
+.hub-submit-btn{width:100%;padding:14px;border-radius:30px;border:none;background:var(--hub-gradient);color:#fff;font-size:.95rem;font-weight:700;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .3s ease;box-shadow:0 6px 22px rgba(124,58,237,.35);margin-top:6px;}
+.hub-submit-btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(124,58,237,.55);}
+
+.hub-request-history{background:var(--hub-card);border:1px solid var(--hub-border);border-radius:var(--hub-radius);padding:22px 20px;backdrop-filter:blur(12px);max-height:520px;display:flex;flex-direction:column;}
+.hub-request-history h4{font-family:'Poppins',sans-serif;font-size:1rem;font-weight:700;margin:0 0 14px;display:flex;align-items:center;gap:8px;}
+.hub-request-history h4 .count-pill{margin-left:auto;font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:20px;background:var(--hub-gradient-soft);border:1px solid var(--hub-border);color:var(--hub-accent-3);}
+.hub-request-list{display:flex;flex-direction:column;gap:10px;overflow-y:auto;flex:1;padding-right:4px;}
+.hub-request-history-item{background:rgba(255,255,255,.03);border:1px solid var(--hub-border);border-radius:var(--hub-radius-sm);padding:12px 14px;display:flex;gap:10px;align-items:flex-start;animation:hubSlideIn .35s ease;}
+@keyframes hubSlideIn{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
+.hub-request-history-item .req-info{flex:1;min-width:0;}
+.hub-request-history-item .req-name{font-size:.85rem;font-weight:700;color:var(--hub-text);margin-bottom:3px;word-break:break-word;}
+.hub-request-history-item .req-meta{font-size:.7rem;color:var(--hub-text-muted);display:flex;gap:8px;flex-wrap:wrap;}
+.hub-request-history-item .req-meta .cat-tag{padding:1px 8px;border-radius:20px;background:var(--hub-gradient-soft);color:var(--hub-accent-3);border:1px solid var(--hub-border);font-weight:600;}
+.hub-request-delete{background:rgba(255,77,109,.12);border:1px solid rgba(255,77,109,.25);color:#ff6b81;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.7rem;transition:all .25s ease;flex-shrink:0;}
+.hub-request-delete:hover{background:rgba(255,77,109,.25);transform:scale(1.1);}
+.hub-request-empty{padding:30px 10px;text-align:center;color:var(--hub-text-muted);font-size:.82rem;}
+.hub-request-empty .empty-emoji{font-size:2rem;display:block;margin-bottom:8px;opacity:.5;}
+
+/* ===== SKELETON ===== */
+.hub-skeleton{background:linear-gradient(90deg,rgba(255,255,255,.03) 25%,rgba(124,58,237,.08) 50%,rgba(255,255,255,.03) 75%);background-size:200% 100%;animation:hubSkeleton 1.4s ease-in-out infinite;border-radius:var(--hub-radius-sm);}
+@keyframes hubSkeleton{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+.sk-stat{height:130px;}
+.sk-card{height:170px;}
+.sk-newest{height:84px;}
+.hub-content-hidden{display:none !important;}
+
+/* ===== FOOTER ===== */
+body.hub-page footer{background:transparent;border-top:1px solid var(--hub-border);padding:36px 16px 100px;text-align:center;position:relative;}
+body.hub-page footer::before{display:none;}
+footer .hub-footer-logo{font-family:'Poppins',sans-serif;font-size:1.4rem;font-weight:800;background:var(--hub-gradient);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:8px;}
+footer .hub-footer-text{font-size:.82rem;color:var(--hub-text-muted);margin-bottom:18px;}
+footer .hub-footer-links{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;}
+footer .hub-footer-links a{font-size:.82rem;color:var(--hub-text-dim);text-decoration:none;font-weight:600;transition:color .25s ease;}
+footer .hub-footer-links a:hover{color:var(--hub-accent-2);}
+
+/* ===== BOTTOM NAV ===== */
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:500;background:rgba(10,10,18,.92);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-top:1px solid var(--hub-border);padding:8px 4px calc(8px + env(safe-area-inset-bottom));justify-content:space-around;align-items:center;}
+.bottom-nav a{flex:1;max-width:80px;display:flex;flex-direction:column;align-items:center;gap:3px;text-decoration:none;color:var(--hub-text-muted);font-size:.65rem;font-weight:600;padding:6px 4px;border-radius:12px;transition:all .25s ease;position:relative;}
+.bottom-nav a i{font-size:1.15rem;}
+.bottom-nav a.active{color:var(--hub-accent-3);}
+.bottom-nav a.active::before{content:'';position:absolute;top:-9px;left:50%;transform:translateX(-50%);width:26px;height:3px;border-radius:3px;background:var(--hub-gradient);box-shadow:0 0 12px rgba(124,58,237,.8);}
+.bottom-nav a:hover{color:var(--hub-accent-3);}
+
+/* ===== RIPPLE ===== */
+.ripple{position:relative;overflow:hidden;}
+.ripple-effect{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,.55),rgba(6,182,212,.25));transform:scale(0);animation:hubRipple .65s ease-out;pointer-events:none;z-index:5;}
+@keyframes hubRipple{to{transform:scale(2.4);opacity:0;}}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width:768px){
+  .bottom-nav{display:flex;}
+  .hub-main{padding-bottom:100px;}
+  .hub-header-inner{gap:10px;}
+  .hub-logo h1{font-size:1.15rem;}
+  .hub-logo h1 span{display:none;}
+  .hub-search-wrapper{order:3;flex-basis:100%;min-width:100%;}
+  .hub-kbd-hint{display:none;}
+  .hub-search-input{padding:11px 44px 11px 42px;}
+  .hub-icon-btn{width:38px;height:38px;font-size:.9rem;}
+  .hub-newest-btn span{display:none;}
+  .hub-newest-btn{padding:9px 12px;}
+  .hub-quick-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;}
+  .hub-card{padding:16px 14px;}
+  .hub-quick-icon{width:42px;height:42px;font-size:1.15rem;}
+  .hub-quick-title{font-size:.88rem;}
+  .hub-quick-desc{font-size:.75rem;}
+  .hub-heading{font-size:1.7rem;}
+  .hub-notif-panel{width:calc(100vw - 24px);right:-8px;}
+  .hub-header .nav-tabs-container{margin-top:8px;}
+  .hub-header .nav-tab{padding:7px 14px;font-size:.75rem;}
+}
+@media (max-width:420px){
+  .hub-quick-grid{grid-template-columns:1fr 1fr;}
+  .hub-quick-desc{display:none;}
+  .hub-stat{padding:16px 14px;}
+  .hub-stat-icon{width:38px;height:38px;font-size:1rem;margin-bottom:8px;}
+}
+</style>
+</head>
+
+<body class="hub-page">
+
+<div id="hubCursorGlow"></div>
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ================================================================
+     HEADER
+     ================================================================ -->
+<header class="hub-header">
+  <div class="hub-header-inner">
+    <a href="index.html" class="hub-logo">
+      <i class="fas fa-crown"></i>
+      <h1>IRGXY<span>HUB CONTROL</span></h1>
+    </a>
+
+    <div class="hub-search-wrapper">
+      <i class="fas fa-search"></i>
+      <input type="text" class="hub-search-input" id="hubSearchInput" placeholder="Cari mod, cheat, akun premium…" autocomplete="off" />
+      <div class="hub-kbd-hint"><kbd>Ctrl</kbd><kbd>K</kbd></div>
+      <div class="hub-search-results" id="hubSearchResults"></div>
+    </div>
+
+    <div class="hub-header-actions">
+      <!-- NOTIF BELL -->
+      <div style="position:relative;">
+        <button class="hub-icon-btn" id="hubNotifBtn" aria-label="Notifikasi">
+          <i class="fas fa-bell"></i>
+          <span class="hub-notif-badge" id="hubNotifBadge">0</span>
+        </button>
+        <div class="hub-notif-panel" id="hubNotifPanel">
+          <div class="hub-notif-header">
+            <h4><i class="fas fa-bell"></i> Notifikasi</h4>
+            <button id="hubMarkAllRead">Tandai semua dibaca</button>
+          </div>
+          <div class="hub-notif-list" id="hubNotifList"></div>
+        </div>
+      </div>
+
+      <!-- THEME TOGGLE (hub) -->
+      <button class="hub-icon-btn" id="hubThemeToggle" aria-label="Ganti tema">
+        <i class="fas fa-moon"></i>
+      </button>
+
+      <!-- SETTINGS DROPDOWN (kompatibel main.js) -->
+      <div style="position:relative;">
+        <button class="hub-icon-btn" id="settingsToggle" aria-label="Pengaturan">
+          <i class="fas fa-cog"></i>
+        </button>
+        <div class="settings-dropdown" id="settingsDropdown">
+          <a href="login.html" class="dropdown-item"><i class="fas fa-sign-in-alt"></i> Login</a>
+          <div class="dropdown-divider"></div>
+          <button class="dropdown-item" id="profileDropdownBtn"><i class="fas fa-user"></i> Profil</button>
+          <button class="dropdown-item" id="themeToggleBtn"><i class="fas fa-palette"></i> Tema</button>
+          <div class="dropdown-divider"></div>
+          <a href="irgxymods.html" class="dropdown-item"><i class="fas fa-info-circle"></i> Tentang</a>
+          <button class="dropdown-item" id="helpBtn"><i class="fas fa-question-circle"></i> Bantuan</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAV TABS -->
+  <div class="nav-tabs-container">
+    <div class="nav-tabs">
+      <a href="index.html" class="nav-tab">Aplikasi Mod</a>
+      <a href="irgxymods.html" class="nav-tab">IrgxyMods</a>
+      <a href="acount.html" class="nav-tab">Akun Premium</a>
+      <a href="fitur.html" class="nav-tab">Fitur Eksklusif</a>
+      <a href="testimoni.html" class="nav-tab">Testimoni</a>
+      <a href="cheat.html" class="nav-tab">Cheat Game</a>
+      <a href="proyek.html" class="nav-tab">Proyek Saya</a>
+      <a href="portofolio.html" class="nav-tab">Portofolio</a>
+      <a href="kontak.html" class="nav-tab">Kontak</a>
+      <a href="hub.html" class="nav-tab active">🚀 Hub</a>
+      <a href="login.html" class="nav-tab"><i class="fas fa-sign-in-alt"></i> Login</a>
+    </div>
+  </div>
+</header>
+
+<!-- ================================================================
+     MAIN
+     ================================================================ -->
+<main class="hub-main">
+
+  <!-- HERO -->
+  <section class="hub-section in-view" id="hero">
+    <div class="hub-hero">
+      <div class="hub-badge-hero"><i class="fas fa-bolt"></i> Pusat Kontrol Mod & Tools</div>
+      <h1 class="hub-heading">Selamat Datang di <span class="grad">Hub IRGXY</span></h1>
+      <p class="hub-subtitle">Semua mod, cheat, akun premium, dan fitur eksklusif dalam satu dashboard interaktif. Cari, kelola, dan request mod favoritmu langsung dari sini.</p>
+      <div class="hub-hero-search">
+        <i class="fas fa-search"></i>
+        <input type="text" class="hub-search-input" id="hubHeroSearch" placeholder="Mau cari apa hari ini? Coba ketik 'capcut' atau 'free fire'…" autocomplete="off" />
+        <div class="hub-kbd-hint"><kbd>Ctrl</kbd><kbd>K</kbd></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="hub-section" id="stats">
+    <div class="hub-section-head">
+      <div>
+        <h2 class="hub-section-title"><i class="fas fa-chart-line"></i> Statistik Live</h2>
+        <p class="hub-section-sub">Data diperbarui secara real-time dari server IRGXY</p>
+      </div>
+    </div>
+    <div class="hub-stats" id="statsSkeleton">
+      <div class="hub-skeleton sk-stat"></div>
+      <div class="hub-skeleton sk-stat"></div>
+      <div class="hub-skeleton sk-stat"></div>
+      <div class="hub-skeleton sk-stat"></div>
+    </div>
+    <div class="hub-stats hub-content-hidden" id="statsContent">
+      <div class="hub-stat"><div class="hub-stat-icon"><i class="fas fa-cube"></i></div><div class="hub-stat-value" data-target="248">0</div><div class="hub-stat-label">Total Mod</div></div>
+      <div class="hub-stat"><div class="hub-stat-icon"><i class="fas fa-download"></i></div><div class="hub-stat-value" data-target="1258400">0</div><div class="hub-stat-label">Total Download</div></div>
+      <div class="hub-stat"><div class="hub-stat-icon"><i class="fas fa-users"></i></div><div class="hub-stat-value" data-target="86420">0</div><div class="hub-stat-label">Total User</div></div>
+      <div class="hub-stat"><div class="hub-stat-icon"><i class="fas fa-star"></i></div><div class="hub-stat-value" data-target="4.85" data-decimal="2">0</div><div class="hub-stat-label">Rating Rata-rata</div></div>
+    </div>
+  </section>
+
+  <!-- QUICK ACCESS -->
+  <section class="hub-section" id="quick-access">
+    <div class="hub-section-head">
+      <div>
+        <h2 class="hub-section-title"><i class="fas fa-rocket"></i> Akses Cepat</h2>
+        <p class="hub-section-sub">Jelajahi seluruh fitur website IRGXYMODS</p>
+      </div>
+    </div>
+    <div class="hub-quick-grid" id="quickAccessSkeleton">
+      <div class="hub-skeleton sk-card"></div><div class="hub-skeleton sk-card"></div>
+      <div class="hub-skeleton sk-card"></div><div class="hub-skeleton sk-card"></div>
+      <div class="hub-skeleton sk-card"></div><div class="hub-skeleton sk-card"></div>
+      <div class="hub-skeleton sk-card"></div><div class="hub-skeleton sk-card"></div>
+    </div>
+    <div class="hub-quick-grid hub-content-hidden" id="quickAccessGrid"></div>
+  </section>
+
+  <!-- NEWEST -->
+  <section class="hub-section" id="newest">
+    <div class="hub-section-head">
+      <div>
+        <h2 class="hub-section-title"><i class="fas fa-clock"></i> Baru Ditambahkan</h2>
+        <p class="hub-section-sub">5 mod & cheat terbaru minggu ini</p>
+      </div>
+      <a href="index.html" style="font-size:.82rem;color:var(--hub-accent-2);text-decoration:none;font-weight:600;">Lihat semua <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="hub-newest-list" id="newestSkeleton">
+      <div class="hub-skeleton sk-newest"></div><div class="hub-skeleton sk-newest"></div>
+      <div class="hub-skeleton sk-newest"></div><div class="hub-skeleton sk-newest"></div>
+      <div class="hub-skeleton sk-newest"></div>
+    </div>
+    <div class="hub-newest-list hub-content-hidden" id="newestList"></div>
+  </section>
+
+  <!-- REQUEST -->
+  <section class="hub-section" id="request">
+    <div class="hub-section-head">
+      <div>
+        <h2 class="hub-section-title"><i class="fas fa-gift"></i> Request Mod</h2>
+        <p class="hub-section-sub">Ajukan mod atau cheat yang belum ada di website</p>
+      </div>
+    </div>
+    <div class="hub-request-grid">
+      <form class="hub-request-form ripple" id="hubRequestForm" novalidate>
+        <div class="hub-form-group">
+          <label for="reqName">Nama Mod / Game *</label>
+          <input type="text" id="reqName" class="hub-input" placeholder="Contoh: Minecraft MOD" minlength="3" />
+          <div class="hub-form-error" id="errName">Nama minimal 3 karakter</div>
+        </div>
+        <div class="hub-form-group">
+          <label for="reqCategory">Kategori *</label>
+          <select id="reqCategory" class="hub-select">
+            <option value="">— Pilih Kategori —</option>
+            <option value="Aplikasi Mod">Aplikasi Mod</option>
+            <option value="Cheat Game">Cheat Game</option>
+            <option value="Akun Premium">Akun Premium</option>
+            <option value="Fitur Eksklusif">Fitur Eksklusif</option>
+            <option value="Tools">Tools</option>
+            <option value="Lainnya">Lainnya</option>
+          </select>
+          <div class="hub-form-error" id="errCategory">Kategori wajib dipilih</div>
+        </div>
+        <div class="hub-form-group">
+          <label for="reqReason">Alasan / Detail *</label>
+          <textarea id="reqReason" class="hub-textarea" placeholder="Jelaskan fitur yang diinginkan, minimal 10 karakter…" minlength="10"></textarea>
+          <div class="hub-form-error" id="errReason">Alasan minimal 10 karakter</div>
+        </div>
+        <div class="hub-form-group">
+          <label for="reqEmail">Email (opsional)</label>
+          <input type="email" id="reqEmail" class="hub-input" placeholder="email@contoh.com" />
+          <div class="hub-form-error" id="errEmail">Format email tidak valid</div>
+        </div>
+        <button type="submit" class="hub-submit-btn ripple"><i class="fas fa-paper-plane"></i> Kirim Request</button>
+      </form>
+
+      <div class="hub-request-history">
+        <h4><i class="fas fa-history"></i> Riwayat Request <span class="count-pill" id="reqCountPill">0</span></h4>
+        <div class="hub-request-list" id="hubRequestList"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ================================================================
+     FOOTER
+     ================================================================ -->
+<footer>
+  <div class="hub-footer-logo">IRGXYMODS</div>
+  <p class="hub-footer-text">&copy; 2025 IRGXYMODS — Hub Pusat Kontrol Mod & Tools</p>
+  <div class="hub-footer-links">
+    <a href="index.html">Aplikasi Mod</a>
+    <a href="cheat.html">Cheat Game</a>
+    <a href="acount.html">Akun Premium</a>
+    <a href="Fitur.html">Fitur Eksklusif</a>
+    <a href="kontak.html">Kontak</a>
+  </div>
+</footer>
+
+<!-- ================================================================
+     BOTTOM NAV (mobile)
+     ================================================================ -->
+<nav class="bottom-nav">
+  <a href="index.html"><i class="fas fa-home"></i><span>Home</span></a>
+  <a href="#" id="bnSearch"><i class="fas fa-search"></i><span>Cari</span></a>
+  <a href="hub.html" class="active"><i class="fas fa-rocket"></i><span>Hub</span></a>
+  <a href="#request" id="bnRequest"><i class="fas fa-plus-circle"></i><span>Request</span></a>
+  <a href="login.html"><i class="fas fa-user"></i><span>Profil</span></a>
+</nav>
+
+<!-- ================================================================
+     MODALS (wajib agar main.js berfungsi penuh)
+     ================================================================ -->
+
+<!-- LOGIN MODAL -->
+<div id="loginModal" class="login-modal">
+  <div class="login-modal-content card-3d">
+    <span class="login-close" id="loginModalClose">&times;</span>
+    <div class="login-logo"><i class="fas fa-crown logo-icon"></i><h1>IRGXYMODS</h1></div>
+    <h2 class="login-title">Masuk ke Akun Anda</h2>
+    <p class="login-subtitle">Akses konten eksklusif dan fitur premium</p>
+    <form id="loginForm" class="login-form">
+      <div class="form-group"><label for="username">Username atau Email</label>
+        <div class="input-with-icon"><i class="fas fa-user"></i><input type="text" id="username" placeholder="Masukkan username atau email" required /></div>
+      </div>
+      <div class="form-group"><label for="password">Password</label>
+        <div class="input-with-icon"><i class="fas fa-lock"></i><input type="password" id="password" placeholder="Masukkan password" required /></div>
+      </div>
+      <div class="remember-forgot">
+        <label class="remember-me"><input type="checkbox" id="rememberMe" /><span>Ingat saya</span></label>
+        <a href="#" class="forgot-password">Lupa password?</a>
+      </div>
+      <button type="submit" class="login-btn" id="loginBtn"><i class="fas fa-sign-in-alt"></i><span>Masuk</span></button>
+    </form>
+    <div class="divider"><span>atau masuk dengan</span></div>
+    <div class="social-login">
+      <a href="#" class="social-btn google-btn"><i class="fab fa-google"></i></a>
+      <a href="#" class="social-btn facebook-btn"><i class="fab fa-facebook-f"></i></a>
+      <a href="#" class="social-btn twitter-btn"><i class="fab fa-twitter"></i></a>
+    </div>
+    <div class="register-link">Belum punya akun? <a href="#">Daftar sekarang</a></div>
+  </div>
+</div>
+
+<!-- PROFILE MODAL -->
+<div id="profileModal" class="profile-modal">
+  <div class="profile-modal-content card-3d">
+    <span class="profile-close" id="profileModalClose">&times;</span>
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="profile-avatar-container">
+          <img src="https://ik.imagekit.io/IrgxyMods/IMG_20250922_195742.jpg?updatedAt=1758545932127" alt="Avatar" class="profile-avatar" />
+          <div class="profile-status"></div>
+          <div class="profile-edit-icon"><i class="fas fa-camera"></i></div>
+        </div>
+        <div class="profile-title"><h2 class="profile-name">Pengguna IRGXYMODS</h2><p class="profile-rank">Member Premium</p></div>
+        <div class="profile-badges">
+          <div class="badge gold-badge"><i class="fas fa-crown"></i></div>
+          <div class="badge verified-badge"><i class="fas fa-check-circle"></i></div>
+          <div class="badge vip-badge"><i class="fas fa-star"></i></div>
+        </div>
+      </div>
+      <div class="profile-stats">
+        <div class="stat-item"><div class="stat-value" id="statDownloads">0</div><div class="stat-label">Aplikasi Diunduh</div></div>
+        <div class="stat-item"><div class="stat-value" id="statDays">0</div><div class="stat-label">Hari Aktif</div></div>
+        <div class="stat-item"><div class="stat-value" id="statBugs">0</div><div class="stat-label">Laporan Bug</div></div>
+      </div>
+      <div class="profile-info">
+        <div class="info-section">
+          <h3 class="section-title"><i class="fas fa-history"></i> Aktivitas Terbaru</h3>
+          <div id="activityTimeline"></div>
+        </div>
+      </div>
+      <div class="profile-actions">
+        <button class="profile-action-btn edit-profile"><i class="fas fa-edit"></i><span>Edit Profil</span></button>
+        <button class="profile-action-btn upgrade-premium"><i class="fas fa-crown"></i><span>Upgrade Premium</span></button>
+        <button class="profile-action-btn logout"><i class="fas fa-sign-out-alt"></i><span>Keluar</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RECAPTCHA MODAL -->
+<div id="recaptchaModal" class="recaptcha-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);backdrop-filter:blur(5px);z-index:2000;align-items:center;justify-content:center;">
+  <div class="card-3d" style="background:rgba(30,30,42,0.95);border-radius:16px;padding:30px;max-width:500px;width:90%;text-align:center;border:1px solid var(--border-subtle);position:relative;">
+    <span id="recaptchaModalClose" style="position:absolute;top:15px;right:15px;color:rgba(255,255,255,0.7);font-size:1.5rem;cursor:pointer;">&times;</span>
+    <h3 style="font-size:1.5rem;margin-bottom:1rem;color:#fff;"><i class="fas fa-shield-alt"></i> Verifikasi Download</h3>
+    <p style="margin-bottom:1.5rem;color:rgba(255,255,255,0.8);">Harap verifikasi bahwa Anda bukan robot sebelum mengunduh.</p>
+    <div class="g-recaptcha" data-sitekey="6LdtFAksAAAAAIPvTbNODpNyrE9zvK6a3iDljat4" data-callback="onDownloadRecaptchaSuccess" data-expired-callback="onDownloadRecaptchaExpired" style="display:flex;justify-content:center;margin-bottom:1.5rem;"></div>
+    <button id="downloadVerifiedBtn" disabled style="background:var(--gold-gradient);color:#1a1a2e;border:none;padding:14px 28px;border-radius:50px;font-weight:700;cursor:pointer;font-size:1rem;"><i class="fas fa-download"></i> Lanjutkan Download</button>
+    <div id="downloadRecaptchaStatus" style="margin-top:1rem;padding:10px 15px;border-radius:8px;font-weight:500;display:none;"></div>
+  </div>
+</div>
+
+<!-- BACK TO TOP -->
+<div class="back-to-top" id="backToTop"><i class="fas fa-arrow-up"></i></div>
+
+<!-- ================================================================
+     SCRIPTS
+     ================================================================ -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="main.js"></script>
+
+<script>
+/* ================================================================
+   HUB CUSTOM LOGIC — semua fitur interaktif hub.html
+   ================================================================ */
+(function () {
+  'use strict';
+  const $  = (s, c=document) => c.querySelector(s);
+  const $$ = (s, c=document) => [...c.querySelectorAll(s)];
+
+  /* ============================================================
+     [1] DATA DUMMY (mudah diupdate manual)
+     ============================================================ */
+  const ALL_MODS = [
+    { name:'WINKIT MOD',            category:'Aplikasi Mod',   url:'index.html',      desc:'Enhance photos & video ke HD',        emoji:'🪀' },
+    { name:'WINK MOD',              category:'Aplikasi Mod',   url:'index.html',      desc:'Enhance ke UHD AI 4K',                emoji:'🎉' },
+    { name:'ALIGHT MOTION PREMIUM', category:'Aplikasi Mod',   url:'index.html',      desc:'Support XML preset di atas 5MB',      emoji:'🎟️' },
+    { name:'REMINI MOD',            category:'Aplikasi Mod',   url:'index.html',      desc:'Photo enhance 2K tanpa iklan',        emoji:'📷' },
+    { name:'SPOTIFY MOD',           category:'Aplikasi Mod',   url:'index.html',      desc:'Streaming musik unlimited',           emoji:'🎧' },
+    { name:'CAPCUT MOD',            category:'Aplikasi Mod',   url:'index.html',      desc:'Video editor premium unlocked',       emoji:'✂️' },
+    { name:'YOUTUBE PREMIUM MOD',   category:'Aplikasi Mod',   url:'index.html',      desc:'Nonton 2K tanpa iklan',               emoji:'▶️' },
+    { name:'CHAT GPT MOD',          category:'Aplikasi Mod',   url:'index.html',      desc:'AI unlimited tanpa batas waktu',      emoji:'🤖' },
+    { name:'LIGHTROOM MOD',         category:'Aplikasi Mod',   url:'index.html',      desc:'Edit foto 4K + AI remove object',     emoji:'🎨' },
+    { name:'FREE FIRE MAX BETA',    category:'Cheat Game',     url:'cheat.html',      desc:'Unlock all skin, anti banned',        emoji:'🎮' },
+    { name:'MOBILE LEGENDS CHEAT',  category:'Cheat Game',     url:'cheat.html',      desc:'Map hack & auto win',                 emoji:'⚔️' },
+    { name:'PUBG MOBILE CHEAT',     category:'Cheat Game',     url:'cheat.html',      desc:'Aimbot & anti banned',                emoji:'🔫' },
+    { name:'AKUN NETFLIX PREMIUM',  category:'Akun Premium',   url:'acount.html',     desc:'Akun sharing 4K UHD',                 emoji:'🎬' },
+    { name:'AKUN SPOTIFY PREMIUM',  category:'Akun Premium',   url:'acount.html',     desc:'Family plan legal',                   emoji:'🎵' },
+    { name:'AKUN CANVA PRO',        category:'Akun Premium',   url:'acount.html',     desc:'Desain unlimited premium',            emoji:'🖌️' },
+    { name:'FITUR EKSKLUSIF VIP',   category:'Fitur Eksklusif',url:'Fitur.html',      desc:'Akses VIP tanpa batas',               emoji:'👑' },
+    { name:'TESTIMONI MEMBER',      category:'Testimoni',      url:'testimoni.html',  desc:'Review pengguna IRGXYMODS',           emoji:'💬' },
+    { name:'PROYEK IRGXY',          category:'Proyek',         url:'proyek.html',     desc:'Koleksi proyek & karya',              emoji:'🧩' },
+    { name:'PORTOFOLIO WEB',        category:'Portofolio',     url:'portofolio.html', desc:'Showcase karya web & UI',             emoji:'💼' },
+    { name:'KONTAK & SUPPORT',      category:'Kontak',         url:'kontak.html',     desc:'Hubungi tim IRGXYMODS',               emoji:'📞' }
+  ];
+
+  const QUICK_ACCESS = [
+    { title:'Mod Terbaru',     desc:'Mod & aplikasi premium paling fresh', icon:'fa-fire',      url:'index.html',      badge:'HOT' },
+    { title:'Cheat Populer',   desc:'Cheat game top rank & anti banned',   icon:'fa-gamepad',   url:'cheat.html',      badge:null },
+    { title:'Akun Premium',    desc:'Netflix, Spotify, Canva, dll',        icon:'fa-crown',     url:'acount.html',     badge:'NEW' },
+    { title:'Fitur Eksklusif', desc:'Fitur VIP khusus member',             icon:'fa-star',      url:'Fitur.html',      badge:null },
+    { title:'Testimoni',       desc:'Bukti nyata dari pengguna',           icon:'fa-comments',  url:'testimoni.html',  badge:null },
+    { title:'Proyek Saya',     desc:'Koleksi proyek & eksperimen',         icon:'fa-cubes',     url:'proyek.html',     badge:null },
+    { title:'Portofolio',      desc:'Showcase karya web & UI/UX',          icon:'fa-briefcase', url:'portofolio.html', badge:null },
+    { title:'Kontak',          desc:'Hubungi tim support IRGXY',           icon:'fa-headset',   url:'kontak.html',     badge:null }
+  ];
+
+  const NEW_MODS = [
+    { name:'REMINI MOD',           category:'Aplikasi Mod', date:'2025-11-18', url:'index.html', emoji:'📷' },
+    { name:'FREE FIRE MAX BETA',   category:'Cheat Game',   date:'2025-11-16', url:'cheat.html', emoji:'🎮' },
+    { name:'CAPCUT MOD',           category:'Aplikasi Mod', date:'2025-11-14', url:'index.html', emoji:'✂️' },
+    { name:'AKUN NETFLIX PREMIUM', category:'Akun Premium', date:'2025-11-12', url:'acount.html',emoji:'🎬' },
+    { name:'LIGHTROOM MOD',        category:'Aplikasi Mod', date:'2025-11-08', url:'index.html', emoji:'🎨' },
+    { name:'SPOTIFY MOD',          category:'Aplikasi Mod', date:'2025-11-05', url:'index.html', emoji:'🎧' }
+  ];
+
+  let NOTIFS = [
+    { id:1, icon:'fa-cube',      title:'Mod Baru: REMINI MOD v3.7',  desc:'Versi terbaru dengan AI enhance 2K tanpa iklan.',  time:'2 jam lalu',  read:false },
+    { id:2, icon:'fa-fire',      title:'Cheat Free Fire Update',      desc:'Anti banned terbaru sudah tersedia.',              time:'5 jam lalu',  read:false },
+    { id:3, icon:'fa-crown',     title:'Promo Akun Premium',          desc:'Diskon 30% untuk paket Netflix 1 bulan.',          time:'1 hari lalu', read:false },
+    { id:4, icon:'fa-bell',      title:'Selamat Datang di Hub!',      desc:'Dashboard baru sudah aktif, cek semua fiturnya.',  time:'2 hari lalu', read:true  },
+    { id:5, icon:'fa-shield-alt',title:'Update Keamanan',             desc:'Semua link download telah diverifikasi ulang.',    time:'3 hari lalu', read:true  }
+  ];
+
+  /* ============================================================
+     [2] HELPER FUNCTIONS
+     ============================================================ */
+  const escapeHtml = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const formatNumber = (n, dec) => {
+    if (dec) return Number(n).toFixed(dec);
+    if (n >= 1000000) return (n/1000000).toFixed(1).replace('.0','') + 'JT';
+    if (n >= 1000)    return (n/1000).toFixed(1).replace('.0','') + 'K';
+    return n.toString();
+  };
+  const highlight = (text, q) => {
+    if (!q) return escapeHtml(text);
+    const safe = escapeHtml(text);
+    const rq = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return safe.replace(new RegExp('(' + rq + ')', 'ig'), '<mark>$1</mark>');
+  };
+
+  /* ============================================================
+     [3] SMART SEARCH
+     ============================================================ */
+  const searchInputs = [$('#hubSearchInput'), $('#hubHeroSearch')].filter(Boolean);
+  const searchResultsBox = $('#hubSearchResults');
+  let currentResults = [];
+  let highlightedIndex = -1;
+
+  function renderSearchResults(query) {
+    if (!searchResultsBox) return;
+    const q = query.trim().toLowerCase();
+    if (!q) { searchResultsBox.classList.remove('active'); currentResults = []; return; }
+
+    currentResults = ALL_MODS.filter(m =>
+      m.name.toLowerCase().includes(q) ||
+      m.category.toLowerCase().includes(q) ||
+      m.desc.toLowerCase().includes(q)
+    ).slice(0, 8);
+
+    if (!currentResults.length) {
+      searchResultsBox.innerHTML = `
+        <div class="hub-search-empty">
+          <span class="empty-emoji">🔍</span>
+          <div style="font-weight:700;margin-bottom:6px;">Mod tidak ditemukan</div>
+          <div style="font-size:.8rem;margin-bottom:10px;">Ajukan request mod yang kamu inginkan?</div>
+          <a href="#request" id="emptyGoRequest">➕ Ajukan Request Sekarang</a>
+        </div>`;
+      searchResultsBox.classList.add('active');
+      $('#emptyGoRequest')?.addEventListener('click', () => {
+        searchResultsBox.classList.remove('active');
+        searchInputs.forEach(i => i.value = '');
+        $('#reqName')?.focus();
+      });
+      return;
+    }
+
+    searchResultsBox.innerHTML = currentResults.map((m, i) => `
+      <a class="hub-search-item" href="${m.url}" data-idx="${i}">
+        <span class="sr-emoji">${m.emoji}</span>
+        <div class="sr-info">
+          <div class="sr-name">${highlight(m.name, q)}</div>
+          <div class="sr-cat">${escapeHtml(m.category)} • ${escapeHtml(m.desc)}</div>
+        </div>
+        <i class="fas fa-arrow-right sr-arrow"></i>
+      </a>`).join('');
+    searchResultsBox.classList.add('active');
+    highlightedIndex = -1;
+  }
+
+  searchInputs.forEach(inp => {
+    inp.addEventListener('input', e => {
+      searchInputs.forEach(i => { if (i !== inp) i.value = e.target.value; });
+      renderSearchResults(e.target.value);
+    });
+    inp.addEventListener('keydown', e => {
+      const items = $$('.hub-search-item', searchResultsBox || document);
+      if (e.key === 'ArrowDown') { e.preventDefault(); highlightedIndex = Math.min(highlightedIndex + 1, items.length - 1); items.forEach((it, idx) => it.classList.toggle('highlighted', idx === highlightedIndex)); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); highlightedIndex = Math.max(highlightedIndex - 1, 0); items.forEach((it, idx) => it.classList.toggle('highlighted', idx === highlightedIndex)); }
+      else if (e.key === 'Enter') {
+        if (highlightedIndex >= 0 && items[highlightedIndex]) items[highlightedIndex].click();
+        else if (currentResults[0]) window.location.href = currentResults[0].url;
+      } else if (e.key === 'Escape') { searchResultsBox?.classList.remove('active'); inp.blur(); }
+    });
+  });
+
+  document.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      const target = $('#hubSearchInput') || $('#hubHeroSearch');
+      target?.focus();
+      target?.select();
+    }
+  });
+
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.hub-search-wrapper') && !e.target.closest('.hub-hero-search')) {
+      searchResultsBox?.classList.remove('active');
+    }
+  });
+
+  /* ============================================================
+     [4] NOTIFICATION BELL
+     ============================================================ */
+  const notifBtn   = $('#hubNotifBtn');
+  const notifPanel = $('#hubNotifPanel');
+  const notifList  = $('#hubNotifList');
+  const notifBadge = $('#hubNotifBadge');
+  const markAllBtn = $('#hubMarkAllRead');
+
+  function renderNotifs() {
+    if (!notifList) return;
+    if (!NOTIFS.length) {
+      notifList.innerHTML = `<div class="hub-search-empty" style="padding:30px 20px;"><span class="empty-emoji">🔔</span><div>Tidak ada notifikasi</div></div>`;
+    } else {
+      notifList.innerHTML = NOTIFS.map(n => `
+        <div class="hub-notif-item ${n.read ? 'read' : 'unread'}" data-id="${n.id}">
+          <div class="hub-notif-icon"><i class="fas ${n.icon}"></i></div>
+          <div class="hub-notif-body">
+            <div class="hub-notif-title">${escapeHtml(n.title)}</div>
+            <div class="hub-notif-desc">${escapeHtml(n.desc)}</div>
+            <div class="hub-notif-time"><i class="far fa-clock"></i> ${escapeHtml(n.time)}</div>
+          </div>
+          <div class="hub-notif-dot"></div>
+        </div>`).join('');
+    }
+    const unread = NOTIFS.filter(n => !n.read).length;
+    if (notifBadge) { notifBadge.textContent = unread; notifBadge.classList.toggle('hidden', unread === 0); }
+  }
+
+  notifBtn?.addEventListener('click', e => { e.stopPropagation(); notifPanel?.classList.toggle('active'); });
+  document.addEventListener('click', e => {
+    if (!e.target.closest('#hubNotifPanel') && !e.target.closest('#hubNotifBtn')) notifPanel?.classList.remove('active');
+  });
+  notifList?.addEventListener('click', e => {
+    const item = e.target.closest('.hub-notif-item');
+    if (!item) return;
+    const n = NOTIFS.find(x => x.id === Number(item.dataset.id));
+    if (n && !n.read) { n.read = true; item.classList.remove('unread'); item.classList.add('read'); renderNotifs(); }
+  });
+  markAllBtn?.addEventListener('click', () => {
+    NOTIFS.forEach(n => n.read = true);
+    renderNotifs();
+    window.showToast?.('Semua notifikasi ditandai sudah dibaca', 'success');
+  });
+  renderNotifs();
+
+  /* ============================================================
+     [5] THEME TOGGLE (dual: hub button + settings dropdown)
+     ============================================================ */
+  const hubThemeBtn = $('#hubThemeToggle');
+
+  function applyTheme(theme) {
+    const isLight = theme === 'light';
+    document.body.classList.toggle('light-theme', isLight);
+    if (hubThemeBtn) hubThemeBtn.innerHTML = isLight ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+  }
+
+  let savedTheme = 'dark';
+  try { savedTheme = localStorage.getItem('irgxy_hub_theme') || 'dark'; } catch (e) {}
+  applyTheme(savedTheme);
+
+  function toggleTheme(source) {
+    const next = document.body.classList.contains('light-theme') ? 'dark' : 'light';
+    applyTheme(next);
+    try { localStorage.setItem('irgxy_hub_theme', next); } catch (e) {}
+    window.showToast?.(next === 'light' ? '☀️ Mode terang aktif' : '🌙 Mode gelap aktif', 'info');
+    if (source === 'dropdown') $('#settingsDropdown')?.classList.remove('active');
+  }
+
+  // Primary hub theme button
+  hubThemeBtn?.addEventListener('click', () => toggleTheme('hub'));
+
+  // Override main.js's listener on #themeToggleBtn (clone to remove old listener)
+  const dropThemeBtn = $('#themeToggleBtn');
+  if (dropThemeBtn) {
+    const newBtn = dropThemeBtn.cloneNode(true);
+    dropThemeBtn.parentNode.replaceChild(newBtn, dropThemeBtn);
+    newBtn.addEventListener('click', () => toggleTheme('dropdown'));
+  }
+
+  /* ============================================================
+     [6] QUICK ACCESS GRID
+     ============================================================ */
+  function renderQuickAccess() {
+    const grid = $('#quickAccessGrid');
+    if (!grid) return;
+    grid.innerHTML = QUICK_ACCESS.map(item => `
+      <a href="${item.url}" class="hub-card ripple">
+        ${item.badge ? `<span class="hub-quick-badge">${item.badge}</span>` : ''}
+        <div class="hub-quick-icon"><i class="fas ${item.icon}"></i></div>
+        <h3 class="hub-quick-title">${escapeHtml(item.title)}</h3>
+        <p class="hub-quick-desc">${escapeHtml(item.desc)}</p>
+        <i class="fas fa-arrow-right hub-quick-arrow"></i>
+      </a>`).join('');
+  }
+
+  /* ============================================================
+     [7] NEWEST LIST
+     ============================================================ */
+  function isNewest(dateStr, refDate) {
+    return (refDate - new Date(dateStr)) / (1000 * 60 * 60 * 24) <= 7;
+  }
+
+  function renderNewest() {
+    const list = $('#newestList');
+    if (!list) return;
+    const sorted = [...NEW_MODS].sort((a, b) => new Date(b.date) - new Date(a.date));
+    const newestDate = new Date(sorted[0].date);
+    const top5 = sorted.slice(0, 5);
+
+    list.innerHTML = top5.map(m => {
+      const isNew = isNewest(m.date, newestDate);
+      const dateLabel = new Date(m.date).toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
+      return `
+        <div class="hub-newest-item">
+          <div class="hub-newest-thumb">${m.emoji}</div>
+          <div class="hub-newest-info">
+            <h4 class="hub-newest-title">${escapeHtml(m.name)} ${isNew ? '<span class="hub-badge-new">NEW</span>' : ''}</h4>
+            <div class="hub-newest-meta">
+              <span class="hub-newest-cat"><i class="fas fa-tag"></i> ${escapeHtml(m.category)}</span>
+              <span class="hub-newest-date"><i class="far fa-calendar"></i> ${dateLabel}</span>
+            </div>
+          </div>
+          <button class="hub-newest-btn ripple" data-url="${m.url}" data-name="${escapeHtml(m.name)}">
+            <i class="fas fa-download"></i><span>Download</span>
+          </button>
+        </div>`;
+    }).join('');
+
+    list.querySelectorAll('.hub-newest-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const name = btn.dataset.name;
+        const url = btn.dataset.url;
+        window.showToast?.(`⬇️ Membuka download ${name}…`, 'success');
+        window.addActivity?.('download', 'Mengunduh ' + name);
+        setTimeout(() => { window.location.href = url; }, 700);
+      });
+    });
+  }
+
+  /* ============================================================
+     [8] REQUEST FORM + RIWAYAT
+     ============================================================ */
+  const REQ_KEY = 'irgxy_hub_requests';
+  const getRequests = () => { try { return JSON.parse(localStorage.getItem(REQ_KEY)) || []; } catch (e) { return []; } };
+  const saveRequests = arr => { try { localStorage.setItem(REQ_KEY, JSON.stringify(arr)); } catch (e) {} };
+
+  function renderRequests() {
+    const list = $('#hubRequestList');
+    const pill = $('#reqCountPill');
+    if (!list) return;
+    const data = getRequests();
+    if (pill) pill.textContent = data.length;
+
+    if (!data.length) {
+      list.innerHTML = `<div class="hub-request-empty"><span class="empty-emoji">📭</span>Belum ada request. Kirim request pertamamu!</div>`;
+      return;
+    }
+
+    list.innerHTML = data.map(r => `
+      <div class="hub-request-history-item" data-id="${r.id}">
+        <div class="req-info">
+          <div class="req-name">${escapeHtml(r.name)}</div>
+          <div class="req-meta">
+            <span class="cat-tag">${escapeHtml(r.category)}</span>
+            <span>${escapeHtml(r.date)}</span>
+          </div>
+        </div>
+        <button class="hub-request-delete" title="Hapus request" data-id="${r.id}"><i class="fas fa-times"></i></button>
+      </div>`).join('');
+
+    list.querySelectorAll('.hub-request-delete').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const next = getRequests().filter(r => r.id !== Number(btn.dataset.id));
+        saveRequests(next);
+        renderRequests();
+        window.showToast?.('Request dihapus', 'info');
+      });
+    });
+  }
+
+  const form    = $('#hubRequestForm');
+  const fName   = $('#reqName');
+  const fCat    = $('#reqCategory');
+  const fReason = $('#reqReason');
+  const fEmail  = $('#reqEmail');
+
+  const setError = (input, errId, show) => {
+    input?.classList.toggle('error', show);
+    document.getElementById(errId)?.classList.toggle('show', show);
+  };
+
+  fName?.addEventListener('input', () => setError(fName, 'errName', fName.value.trim().length > 0 && fName.value.trim().length < 3));
+  fCat?.addEventListener('change', () => setError(fCat, 'errCategory', fCat.value === ''));
+  fReason?.addEventListener('input', () => setError(fReason, 'errReason', fReason.value.trim().length > 0 && fReason.value.trim().length < 10));
+  fEmail?.addEventListener('input', () => {
+    if (!fEmail.value.trim()) { setError(fEmail, 'errEmail', false); return; }
+    setError(fEmail, 'errEmail', !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fEmail.value.trim()));
+  });
+
+  form?.addEventListener('submit', e => {
+    e.preventDefault();
+    const name = fName.value.trim(), cat = fCat.value, reason = fReason.value.trim(), email = fEmail.value.trim();
+    let ok = true;
+    if (name.length < 3)    { setError(fName, 'errName', true);     ok = false; }
+    if (!cat)               { setError(fCat, 'errCategory', true);  ok = false; }
+    if (reason.length < 10) { setError(fReason, 'errReason', true); ok = false; }
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setError(fEmail, 'errEmail', true); ok = false; }
+
+    if (!ok) { window.showToast?.('Mohon periksa kembali form Anda', 'error'); return; }
+
+    const data = getRequests();
+    data.unshift({
+      id: Date.now(), name, category: cat, reason, email,
+      date: new Date().toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' })
+    });
+    saveRequests(data);
+    renderRequests();
+    form.reset();
+    window.showToast?.('✅ Request berhasil dikirim! Terima kasih.', 'success');
+  });
+
+  renderRequests();
+
+  /* ============================================================
+     [9] STATS COUNTER
+     ============================================================ */
+  function animateCount(el, target, decimal, duration=1600) {
+    const start = performance.now();
+    function tick(now) {
+      const t = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - t, 3);
+      const val = target * eased;
+      el.textContent = decimal ? val.toFixed(decimal) : formatNumber(Math.floor(val));
+      if (t < 1) requestAnimationFrame(tick);
+      else el.textContent = decimal ? target.toFixed(decimal) : formatNumber(target);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function runStatsCounters() {
+    $$('#statsContent .hub-stat-value').forEach(el => {
+      const target  = parseFloat(el.dataset.target);
+      const decimal = parseInt(el.dataset.decimal || '0', 10);
+      animateCount(el, target, decimal);
+    });
+  }
+
+  /* ============================================================
+     [10] SKELETON → REVEAL + OBSERVE
+     ============================================================ */
+  function showContent(id) { document.getElementById(id)?.classList.remove('hub-content-hidden'); }
+  function hideSkeleton(id) { const el = document.getElementById(id); if (el) el.style.display = 'none'; }
+
+  function observeSections() {
+    const sections = $$('.hub-section');
+    if (!('IntersectionObserver' in window)) { sections.forEach(s => s.classList.add('in-view')); return; }
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) { entry.target.classList.add('in-view'); obs.unobserve(entry.target); }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+    sections.forEach(s => obs.observe(s));
+  }
+
+  function bootHub() {
+    setTimeout(() => {
+      hideSkeleton('statsSkeleton');
+      showContent('statsContent');
+      runStatsCounters();
+
+      renderQuickAccess();
+      hideSkeleton('quickAccessSkeleton');
+      showContent('quickAccessGrid');
+
+      renderNewest();
+      hideSkeleton('newestSkeleton');
+      showContent('newestList');
+
+      observeSections();
+    }, 500);
+  }
+
+  /* ============================================================
+     [11] RIPPLE CLICK
+     ============================================================ */
+  document.addEventListener('click', e => {
+    const target = e.target.closest('.ripple');
+    if (!target) return;
+    const rect = target.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple-effect';
+    ripple.style.width = ripple.style.height = size + 'px';
+    ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+    ripple.style.top  = (e.clientY - rect.top  - size / 2) + 'px';
+    target.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 650);
+  });
+
+  /* ============================================================
+     [12] CURSOR GLOW (desktop only)
+     ============================================================ */
+  (function initCursorGlow() {
+    const isDesktop = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+    if (!isDesktop) return;
+    const glow = document.getElementById('hubCursorGlow');
+    if (!glow) return;
+    let mx = window.innerWidth / 2, my = window.innerHeight / 2;
+    let cx = mx, cy = my;
+    let visible = false;
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      if (!visible) { glow.style.opacity = '1'; visible = true; }
+    });
+    document.addEventListener('mouseleave', () => { glow.style.opacity = '0'; visible = false; });
+    (function raf() {
+      cx += (mx - cx) * 0.14;
+      cy += (my - cy) * 0.14;
+      glow.style.left = cx + 'px';
+      glow.style.top  = cy + 'px';
+      requestAnimationFrame(raf);
+    })();
+  })();
+
+  /* ============================================================
+     [13] BOTTOM NAV QUICK ACTIONS
+     ============================================================ */
+  $('#bnSearch')?.addEventListener('click', e => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => $('#hubSearchInput')?.focus(), 400);
+  });
+  $('#bnRequest')?.addEventListener('click', e => {
+    e.preventDefault();
+    $('#request')?.scrollIntoView({ behavior:'smooth', block:'start' });
+    setTimeout(() => $('#reqName')?.focus(), 600);
+  });
+
+  /* ============================================================
+     [14] BACK TO TOP (kompatibel main.js)
+     ============================================================ */
+  const backToTop = $('#backToTop');
+  if (backToTop && !backToTop.dataset.hubBound) {
+    // main.js sudah handle ini, tapi kita pastikan kalau main.js tidak load
+    if (!document.body.dataset.mainJsLoaded) {
+      window.addEventListener('scroll', () => {
+        backToTop.classList.toggle('visible', window.pageYOffset > 300);
+      });
+      backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    }
+  }
+
+  /* ============================================================
+     [15] BOOT
+     ============================================================ */
+  if (document.readyState !== 'loading') bootHub();
+  else document.addEventListener('DOMContentLoaded', bootHub);
+
+  console.log('🚀 Hub IRGXY loaded — semua fitur aktif');
+})();
+</script>
+</body>
+</html>
